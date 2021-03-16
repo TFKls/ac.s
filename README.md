@@ -1,5 +1,5 @@
-# AC.s
-*Assembly Code scraps*
+# ac.s
+*ASM Code scraps*
 
 ## Why?
 For fun

@@ -1,4 +1,4 @@
-## ASM Code Scraps
+## ac.s - ASM Code Scraps
 ## Copyright (C) 2021 Tomasz "TFKls" Kulis
 
 ##  This program is free software: you can redistribute it and/or modify
