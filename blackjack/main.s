@@ -122,7 +122,7 @@ read_loopexit:
 	push %rbx                                                # Restore call on stack
 	ret                                                      # Return from subroutine
 
-readchar:                                                    # Reads a singular character and returns it on the stack
+readchar:                                                        # Reads a singular character and returns it on the stack
 	## :: Stack -> Stack
 	## :: Takes: None
 	## :: Returns: %r8b (%r8)
