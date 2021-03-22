@@ -17,12 +17,12 @@
 	.global _start
 	## -- MAIN --
 _start:
-	push $fstr 										# String A buffer
-	push $3												# String A len
-	call read											# String A read call
-	push $sstr										# String B buffer
-	push $3												# String B len
-	call read											# String B read call
+	push $fstr                                               # String A buffer
+	push $3                                                  # String A len
+	call read                                                # String A read call
+	push $sstr                                               # String B buffer
+	push $3                                                  # String B len
+	call read                                                # String B read call
 	push $fstr
 	call parse
 	pop %r10
@@ -50,15 +50,9 @@ exit:
 	push $newline
 	push $nllen
 	call print
-	mov $60, %rax 								# Set exit syscall
-	mov $0, %rdi									# Return code
-	syscall												# Call sys_exit
-
-
-
-
-
-
+	mov $60, %rax                                            # Set exit syscall
+	mov $0, %rdi                                             # Return code
+	syscall                                                  # Call sys_exit
 
 	
 	## -- DATA --
@@ -84,18 +78,18 @@ print:
 	## :: Takes: None
 	## :: Returns: None
 	## :: Modifies: %rdx %rsi 
-	pop %rbx											# Push call location into register
-	pop %rdx											# Pop the stack information - length
-	pop %rsi											# Pop the string address
-	push %rax											# Push %rax
-	push %rdi											# Push %rdi
-	mov $1, %rax									# Set write syscall 
-	mov $1, %rdi									# Set stdout as file
-	syscall												# Syscall to sys_write
-	pop %rdi											# Restore %rdi
-	pop %rax 											# Restore %rax
-	push %rbx											# Restore original call location 
-	ret														# Return from subroutine
+	pop %rbx                                                 # Push call location into register
+	pop %rdx                                                 # Pop the stack information - length
+	pop %rsi                                                 # Pop the string address
+	push %rax                                                # Push %rax
+	push %rdi                                                # Push %rdi
+	mov $1, %rax                                             # Set write syscall 
+	mov $1, %rdi                                             # Set stdout as file
+	syscall                                                  # Syscall to sys_write
+	pop %rdi                                                 # Restore %rdi
+	pop %rax                                                 # Restore %rax
+	push %rbx                                                # Restore original call location 
+	ret                                                      # Return from subroutine
 
 read:
 	## Read subroutine
@@ -103,47 +97,47 @@ read:
 	## :: Takes: None
 	## ::	Returns: None
 	## :: Modifies: %rax %rcx %rdx %rdi %rsi %r8
-	pop %rbx 											# Pop call location from stack
-	pop %rdx											# Pop length of buffer
-	pop %rax 											# Pop buffer to reg.
-	push %rbx											# Return call location to stack
-	mov $0, %r9										# Initialize counter
+	pop %rbx                                                 # Pop call location from stack
+	pop %rdx                                                 # Pop length of buffer
+	pop %rax                                                 # Pop buffer to reg.
+	push %rbx                                                # Return call location to stack
+	mov $0, %r9                                              # Initialize counter
 read_loop:
-	push %rax											# Save buffer to stack
-	push %rdx											# Save buffer size to stack
+	push %rax                                                # Save buffer to stack
+	push %rdx                                                # Save buffer size to stack
 	call readchar
-	pop %rdx											# Restore buffer size
-	pop %rax											# Restore buffer
-	cmp $0x0A, %r8b								# Check if the char is a newline
-	je read_loopexit							# Break
-	movb %r8b, (%rax)							# Set byte to buffer
-	inc %rax											# Increment arrayptr
-	inc %r9												# Increment counter
-	cmp %r9, %rdx									# Check if is counter size of buffer
-	je read_loopexit							# Break
-	jmp read_loop									# Loop back
+	pop %rdx                                                 # Restore buffer size
+	pop %rax                                                 # Restore buffer
+	cmp $0x0A, %r8b                                          # Check if the char is a newline
+	je read_loopexit                                         # Break
+	movb %r8b, (%rax)                                        # Set byte to buffer
+	inc %rax                                                 # Increment arrayptr
+	inc %r9                                                  # Increment counter
+	cmp %r9, %rdx                                            # Check if is counter size of buffer
+	je read_loopexit                                         # Break
+	jmp read_loop                                            # Loop back
 read_loopexit:
-	pop %rbx											# Swap return on stack
-	push %r9											# Set return on stack
-	push %rbx 										# Restore call on stack
-	ret														# Return from subroutine
+	pop %rbx                                                 # Swap return on stack
+	push %r9                                                 # Set return on stack
+	push %rbx                                                # Restore call on stack
+	ret                                                      # Return from subroutine
 
-readchar:												# Reads a singular character and returns it on the stack
+readchar:                                                        # Reads a singular character and returns it on the stack
 	## :: Stack -> Stack
 	## :: Takes: None
 	## :: Returns: %r8b (%r8)
 	## :: Modifies: %rax %rdx %rdi %rsi %r8
-	mov $0, %rax									# Set syscall to read
-	mov $0, %rdi									# Set FD to stdin
-	mov $readbuf, %rsi						# Set temporary buffer
-	mov $1, %rdx									# Set buffer size to 1
-	syscall												# Syscall to sys_read
-	cmp $0, %rax 									# Check if is EOF
-	je readchar_eof								# Jump if equal
+	mov $0, %rax                                             # Set syscall to read
+	mov $0, %rdi                                             # Set FD to stdin
+	mov $readbuf, %rsi                                       # Set temporary buffer
+	mov $1, %rdx                                             # Set buffer size to 1
+	syscall                                                  # Syscall to sys_read
+	cmp $0, %rax                                             # Check if is EOF
+	je readchar_eof                                          # Jump if equal
 readchar_noeof:	
-	movb (readbuf), %r8b					# If not EOF, push readbuf* to dl reg  
-	jmp readchar_eofskip					# Skip the EOF case
+	movb (readbuf), %r8b                                     # If not EOF, push readbuf* to dl reg  
+	jmp readchar_eofskip                                     # Skip the EOF case
 readchar_eof:
-	movb $0x0A, %r8b							# Set character to newline if it is EOF
+	movb $0x0A, %r8b                                         # Set character to newline if it is EOF
 readchar_eofskip:
-	ret														# Return from subroutine
+	ret                                                      # Return from subroutine
